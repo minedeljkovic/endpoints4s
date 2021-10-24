@@ -60,7 +60,7 @@ trait Urls extends algebra.Urls {
           docs,
           schema = {
             val defaultJson = value.encoder.encode(default)
-            value.schema.withDefinedDefault(Some(defaultJson))
+            value.schema.withDefinedDefault(defaultJson)
           }
         )
       )
@@ -69,7 +69,7 @@ trait Urls extends algebra.Urls {
   case class DocumentedQueryStringParam[A](
       schema: Schema,
       isRequired: Boolean,
-      encoder: Encoder[A, ujson.Value]
+      encoder: Encoder[A, Option[ujson.Value]]
   )
   type QueryStringParam[A] = DocumentedQueryStringParam[A]
 
@@ -78,10 +78,7 @@ trait Urls extends algebra.Urls {
   ): QueryStringParam[Option[A]] =
     param.copy(
       isRequired = false,
-      encoder = {
-        case None    => ujson.Null
-        case Some(a) => param.encoder.encode(a)
-      }
+      encoder = _.map(param.encoder.encode)
     )
 
   implicit def repeatedQueryStringParam[A, CC[X] <: Iterable[X]](implicit
@@ -96,7 +93,7 @@ trait Urls extends algebra.Urls {
         title = None
       ),
       isRequired = false,
-      encoder = cc => ujson.Arr(cc.map(param.encoder.encode))
+      encoder = cc => Some(ujson.Arr(cc.flatMap(param.encoder.encode)))
     )
 
   implicit lazy val queryStringPartialInvariantFunctor: PartialInvariantFunctor[QueryString] =
@@ -123,22 +120,34 @@ trait Urls extends algebra.Urls {
     }
 
   def stringQueryString: QueryStringParam[String] =
-    DocumentedQueryStringParam(Schema.simpleString, isRequired = true, ujson.Str(_))
+    DocumentedQueryStringParam(Schema.simpleString, isRequired = true, a => Some(ujson.Str(a)))
 
   override def uuidQueryString: QueryStringParam[UUID] =
-    DocumentedQueryStringParam(Schema.simpleUUID, isRequired = true, u => ujson.Str(u.toString))
+    DocumentedQueryStringParam(
+      Schema.simpleUUID,
+      isRequired = true,
+      u => Some(ujson.Str(u.toString))
+    )
 
   override def intQueryString: QueryStringParam[Int] =
-    DocumentedQueryStringParam(Schema.simpleInteger, isRequired = true, n => ujson.Num(n.toDouble))
+    DocumentedQueryStringParam(
+      Schema.simpleInteger,
+      isRequired = true,
+      n => Some(ujson.Num(n.toDouble))
+    )
 
   override def longQueryString: QueryStringParam[Long] =
-    DocumentedQueryStringParam(Schema.simpleLong, isRequired = true, n => ujson.Num(n.toDouble))
+    DocumentedQueryStringParam(
+      Schema.simpleLong,
+      isRequired = true,
+      n => Some(ujson.Num(n.toDouble))
+    )
 
   override def booleanQueryString: QueryStringParam[Boolean] =
-    DocumentedQueryStringParam(Schema.simpleBoolean, isRequired = true, ujson.Bool(_))
+    DocumentedQueryStringParam(Schema.simpleBoolean, isRequired = true, a => Some(ujson.Bool(a)))
 
   override def doubleQueryString: QueryStringParam[Double] =
-    DocumentedQueryStringParam(Schema.simpleNumber, isRequired = true, ujson.Num(_))
+    DocumentedQueryStringParam(Schema.simpleNumber, isRequired = true, a => Some(ujson.Num(a)))
 
   type Segment[A] = Schema
 
