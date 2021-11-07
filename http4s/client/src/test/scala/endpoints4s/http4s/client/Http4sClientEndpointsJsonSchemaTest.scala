@@ -32,9 +32,7 @@ class TestJsonSchemaClient[F[_]: Concurrent](host: Uri, client: Client[F])
     with algebra.ChunkedJsonEntitiesTestApi
     with circe.JsonFromCirceCodecTestApi
     with circe.JsonEntitiesFromCodecs
-    with algebra.circe.ChunkedJsonEntitiesTestApi {
-      override type WithDefault[A] = Option[A]
-    }
+    with algebra.circe.ChunkedJsonEntitiesTestApi
 
 class Http4sClientEndpointsJsonSchemaTest
     extends client.EndpointsTestSuite[TestJsonSchemaClient[IO]]

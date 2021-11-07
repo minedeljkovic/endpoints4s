@@ -10,9 +10,7 @@ class TestClient(val address: String)
     extends ClientEndpointsTestApi
     with BasicAuthenticationTestApi
     with Endpoints
-    with BasicAuthentication {
-      override type WithDefault[A] = Option[A]
-    }
+    with BasicAuthentication
 
 class EndpointsTest extends EndpointsTestSuite[TestClient] with BasicAuthTestSuite[TestClient] {
 

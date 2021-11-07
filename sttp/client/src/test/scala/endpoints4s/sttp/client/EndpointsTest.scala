@@ -28,9 +28,7 @@ class TestClient[R[_]](address: String, backend: SttpBackend[R, Any])
     with ClientEndpointsTestApi
     with JsonFromPlayJsonCodecTestApi
     with SumTypedEntitiesTestApi
-    with TextEntitiesTestApi {
-      override type WithDefault[A] = Option[A]
-    }
+    with TextEntitiesTestApi
 
 class EndpointsTestSync
     extends EndpointsTestSuite[TestClient[Try]]

@@ -9,7 +9,7 @@ import endpoints4s.{Invalid, Valid}
 import endpoints4s.algebra.EndpointsTestApi
 
 trait ClientEndpointsTestApi extends EndpointsTestApi {
-  type WithDefault[A] = Option[A]
+  type WithDefault[A] >: Option[A]
 }
 
 trait EndpointsTestSuite[T <: ClientEndpointsTestApi] extends ClientTestBase[T] {

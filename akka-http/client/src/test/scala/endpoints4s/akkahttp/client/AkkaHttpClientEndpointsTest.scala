@@ -25,9 +25,7 @@ class TestClient(settings: EndpointsSettings)(implicit
     with algebra.circe.JsonEntitiesFromCodecs
     with ChunkedJsonEntities
     with ChunkedJsonEntitiesTestApi
-    with algebra.circe.ChunkedJsonEntitiesTestApi {
-      override type WithDefault[A] = Option[A]
-    }
+    with algebra.circe.ChunkedJsonEntitiesTestApi
 
 class AkkaHttpClientEndpointsTest
     extends algebra.client.EndpointsTestSuite[TestClient]

@@ -19,9 +19,7 @@ class TestClient(address: String, wsClient: WSClient)(implicit
     with algebra.TextEntitiesTestApi
     with algebra.SumTypedEntitiesTestApi
     with circe.JsonFromCirceCodecTestApi
-    with circe.JsonEntitiesFromCodecs {
-      override type WithDefault[A] = Option[A]
-    }
+    with circe.JsonEntitiesFromCodecs
 
 class EndpointsTest
     extends client.EndpointsTestSuite[TestClient]
