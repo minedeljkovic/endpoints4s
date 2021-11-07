@@ -14,12 +14,14 @@ class TestClient(address: String, wsClient: WSClient)(implicit
     with BasicAuthentication
     with JsonEntitiesFromCodecs
     with algebra.BasicAuthenticationTestApi
-    with algebra.EndpointsTestApi
+    with algebra.client.ClientEndpointsTestApi
     with algebra.JsonFromCodecTestApi
     with algebra.TextEntitiesTestApi
     with algebra.SumTypedEntitiesTestApi
     with circe.JsonFromCirceCodecTestApi
-    with circe.JsonEntitiesFromCodecs
+    with circe.JsonEntitiesFromCodecs {
+      override type WithDefault[A] = Option[A]
+    }
 
 class EndpointsTest
     extends client.EndpointsTestSuite[TestClient]

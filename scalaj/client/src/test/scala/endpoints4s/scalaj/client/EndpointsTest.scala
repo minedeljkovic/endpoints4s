@@ -1,16 +1,18 @@
 package endpoints4s.scalaj.client
 
-import endpoints4s.algebra.client.{BasicAuthTestSuite, EndpointsTestSuite}
-import endpoints4s.algebra.{BasicAuthenticationTestApi, EndpointsTestApi}
+import endpoints4s.algebra.client.{BasicAuthTestSuite, EndpointsTestSuite, ClientEndpointsTestApi}
+import endpoints4s.algebra.BasicAuthenticationTestApi
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class TestClient(val address: String)
-    extends EndpointsTestApi
+    extends ClientEndpointsTestApi
     with BasicAuthenticationTestApi
     with Endpoints
-    with BasicAuthentication
+    with BasicAuthentication {
+      override type WithDefault[A] = Option[A]
+    }
 
 class EndpointsTest extends EndpointsTestSuite[TestClient] with BasicAuthTestSuite[TestClient] {
 

@@ -26,13 +26,15 @@ class TestJsonSchemaClient[F[_]: Concurrent](host: Uri, client: Client[F])
     with JsonEntitiesFromCodecs
     with ChunkedJsonEntities
     with algebra.BasicAuthenticationTestApi
-    with algebra.EndpointsTestApi
+    with algebra.client.ClientEndpointsTestApi
     with algebra.JsonFromCodecTestApi
     with algebra.SumTypedEntitiesTestApi
     with algebra.ChunkedJsonEntitiesTestApi
     with circe.JsonFromCirceCodecTestApi
     with circe.JsonEntitiesFromCodecs
-    with algebra.circe.ChunkedJsonEntitiesTestApi
+    with algebra.circe.ChunkedJsonEntitiesTestApi {
+      override type WithDefault[A] = Option[A]
+    }
 
 class Http4sClientEndpointsJsonSchemaTest
     extends client.EndpointsTestSuite[TestJsonSchemaClient[IO]]

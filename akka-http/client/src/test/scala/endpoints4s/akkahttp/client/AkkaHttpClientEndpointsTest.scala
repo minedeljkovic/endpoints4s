@@ -15,7 +15,7 @@ class TestClient(settings: EndpointsSettings)(implicit
     M: Materializer
 ) extends Endpoints(settings)
     with BasicAuthentication
-    with algebra.EndpointsTestApi
+    with algebra.client.ClientEndpointsTestApi
     with algebra.BasicAuthenticationTestApi
     with algebra.TextEntitiesTestApi
     with algebra.JsonFromCodecTestApi
@@ -25,7 +25,9 @@ class TestClient(settings: EndpointsSettings)(implicit
     with algebra.circe.JsonEntitiesFromCodecs
     with ChunkedJsonEntities
     with ChunkedJsonEntitiesTestApi
-    with algebra.circe.ChunkedJsonEntitiesTestApi
+    with algebra.circe.ChunkedJsonEntitiesTestApi {
+      override type WithDefault[A] = Option[A]
+    }
 
 class AkkaHttpClientEndpointsTest
     extends algebra.client.EndpointsTestSuite[TestClient]
